@@ -1,5 +1,5 @@
 # SQL Challenge: Vibestream II
 
-Connecting to the Vibestream Database: postgresql://Test:bQNxVzJL4g6u@ep-noisy-flower-846766.us-east-2.aws.neon.tech/vibestream?sslmode=require
+Connecting to the Vibestream Database: [postgresql://Test:bQNxVzJL4g6u@ep-noisy-flower-846766.us-east-2.aws.neon.tech/vibestream?sslmode=require]
 
-Used sofware: [Beekeeper Studio](https://www.beekeeperstudio.io/)
+Used software: [Beekeeper Studio](https://www.beekeeperstudio.io/)
