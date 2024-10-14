@@ -2,4 +2,4 @@
 
 Connecting to the Vibestream Database: `postgresql://Test:bQNxVzJL4g6u@ep-noisy-flower-846766.us-east-2.aws.neon.tech/vibestream?sslmode=require`
 
-Used software: [Beekeeper Studio](https://www.beekeeperstudio.io/)
+Software used: [Beekeeper Studio](https://www.beekeeperstudio.io/)
