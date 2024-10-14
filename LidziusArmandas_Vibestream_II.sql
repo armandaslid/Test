@@ -12,8 +12,8 @@ Expected column names: char_limit_posts
 --We want a count of posts that are exactly 25 character length.
 
 SELECT COUNT(post_id) AS char_limit_posts   -- Counting all posts and renaming the column
-FROM posts																	-- Selecting from 'posts' table
-WHERE length(content) = 25									-- Filtering out only posts that are 25 character length
+FROM posts				    -- Selecting from 'posts' table
+WHERE length(content) = 25		    -- Filtering out only posts that are 25 character length
 ;
 
 
@@ -34,22 +34,22 @@ than 2 (i.e dates where JamesTiger8285 made at least 3 more posts than RobertMer
 -- Firstly we want to find how many posts were made per date (if any of the user made a post) by the given users
 -- Secondly we want filter out the post dates by the given criteria: that one of user made at least 3 more posts
 
-WITH tempt AS																										 -- Creating a temp table to count each users' posts
+WITH tempt AS											-- Creating a temp table to count each users' posts
 (
-SELECT posts.post_date																					 -- Post date for a given user
-       ,SUM(CASE WHEN users.user_name = 'JamesTiger8285' THEN 1 ELSE 0 END) AS james_posts					-- Post count first user
-       ,SUM(CASE WHEN users.user_name = 'RobertMermaid7605' THEN 1 ELSE 0 END) AS robert_posts			-- Post count second user
+SELECT posts.post_date										-- Post date for a given user
+       ,SUM(CASE WHEN users.user_name = 'JamesTiger8285' THEN 1 ELSE 0 END) AS james_posts	-- Post count first user
+       ,SUM(CASE WHEN users.user_name = 'RobertMermaid7605' THEN 1 ELSE 0 END) AS robert_posts	-- Post count second user
 FROM posts
-JOIN users																											 -- Joining 'posts' and 'users' tables (because user_id is not known)
+JOIN users											-- Joining 'posts' and 'users' tables (because user_id is not known)
 ON posts.user_id = users.user_id
-WHERE users.user_name IN ('JamesTiger8285', 'RobertMermaid7605') -- Filtering dates and post counts by the two users
-GROUP BY posts.post_date																				 -- Grouping post counts by date
+WHERE users.user_name IN ('JamesTiger8285', 'RobertMermaid7605') 	-- Filtering dates and post counts by the two users
+GROUP BY posts.post_date									-- Grouping post counts by date
 )
 
-SELECT post_date																								 -- Selecting final dates
-FROM tempt																											 -- from temp table
-WHERE ABS(james_posts - robert_posts) > 2												 -- Filtering post counts that the difference is more than 2 posts per date
-ORDER BY post_date																							 -- Ordering post date ascending
+SELECT post_date										-- Selecting final dates
+FROM tempt											-- from temp table
+WHERE ABS(james_posts - robert_posts) > 2							-- Filtering post counts that the difference is more than 2 posts per date
+ORDER BY post_date										-- Ordering post date ascending
 ;
 
 
@@ -77,51 +77,51 @@ Expected column names: `follower_id`
 
 -- Q3 solution:
 
-SELECT follower_id																							-- 1-step path
-FROM users																											-- We find follower_ids who follow WilliamEagle6815 directly
+SELECT follower_id						-- 1-step path
+FROM users							-- We find follower_ids who follow WilliamEagle6815 directly
 JOIN follows
 ON users.user_id = follows.followee_id
 WHERE user_name = 'WilliamEagle6815'
 
-UNION																														-- UNION to add only unique (distinct) values
+UNION								-- UNION to add only unique (distinct) values
 
-SELECT follower_id																							-- 2-step path
+SELECT follower_id						-- 2-step path
 FROM users											
 JOIN follows
 ON users.user_id = follows.followee_id
-WHERE followee_id IN(SELECT follower_id													-- Adding 1-step path results into subquary to find 2-step path records
-										 FROM users
-										 JOIN follows
-										 ON users.user_id = follows.followee_id
-										 WHERE user_name = 'WilliamEagle6815')
+WHERE followee_id IN(SELECT follower_id				-- Adding 1-step path results into subquary to find 2-step path records
+		     FROM users
+		     JOIN follows
+		     ON users.user_id = follows.followee_id
+		     WHERE user_name = 'WilliamEagle6815')
                      
 UNION
 
-SELECT follower_id																							-- 3-step path
+SELECT follower_id						-- 3-step path
 FROM users
 JOIN follows
 ON users.user_id = follows.followee_id
-WHERE followee_id IN(SELECT follower_id													-- Adding 2-step path results into subquary to find 3-step path records
-                      FROM users
-                      JOIN follows
-                      ON users.user_id = follows.followee_id
-                      WHERE followee_id IN(SELECT follower_id
-                                           FROM users
-                                           JOIN follows
-                                           ON users.user_id = follows.followee_id
-                                           WHERE user_name = 'WilliamEagle6815'))
+WHERE followee_id IN(SELECT follower_id				-- Adding 2-step path results into subquary to find 3-step path records
+                     FROM users
+                     JOIN follows
+                     ON users.user_id = follows.followee_id
+                     WHERE followee_id IN(SELECT follower_id
+                                          FROM users
+                                          JOIN follows
+                                          ON users.user_id = follows.followee_id
+                                          WHERE user_name = 'WilliamEagle6815'))
                                            
 UNION
 
-SELECT DISTINCT follower_id																			-- 4-step path
+SELECT DISTINCT follower_id					-- 4-step path
 FROM users
 JOIN follows
 ON users.user_id = follows.followee_id
-WHERE followee_id IN(SELECT follower_id													-- Adding 3-step path results into subquary to find 4-step path records
-										 FROM users
-										 JOIN follows
-										 ON users.user_id = follows.followee_id
-										 WHERE followee_id IN(SELECT follower_id
+WHERE followee_id IN(SELECT follower_id				-- Adding 3-step path results into subquary to find 4-step path records
+		     FROM users
+		     JOIN follows
+		     ON users.user_id = follows.followee_id
+		     WHERE followee_id IN(SELECT follower_id
                                           FROM users
                                           JOIN follows
                                           ON users.user_id = follows.followee_id
@@ -133,8 +133,8 @@ WHERE followee_id IN(SELECT follower_id													-- Adding 3-step path result
 AND follower_id != (SELECT user_id	-- Adding a filter, to make sure that user would not be included in the list while following himself
                     FROM users
                     WHERE user_name = 'WilliamEagle6815')
-ORDER BY 1																											-- Order the list by follower_id
-LIMIT 10																												-- Showing only the top 10 records (Total 363 records)
+ORDER BY 1							-- Order the list by follower_id
+LIMIT 10							-- Showing only the top 10 records (Total 363 records)
 ;
 
 
@@ -150,22 +150,22 @@ Expected column names: `post_date`, `user_id`, `posts`
 
 -- Q4 solution:
 
-WITH tempt AS																										-- Temporary table using CTE (Common Table Expression)
-(																																-- to rank all the users by posts
-SELECT post_date																								-- Selecting all the rows that will be necessary at the final query
-			 ,user_id
-       ,COUNT(post_id) AS posts
-       ,DENSE_RANK() OVER (PARTITION BY post_date ORDER BY COUNT(post_id) DESC) AS rank  -- Window function to rank all the users
+WITH tempt AS							-- Temporary table using CTE (Common Table Expression)
+(								-- to rank all the users by posts
+SELECT  post_date						-- Selecting all the rows that will be necessary at the final query
+	,user_id
+	,COUNT(post_id) AS posts
+	,DENSE_RANK() OVER (PARTITION BY post_date ORDER BY COUNT(post_id) DESC) AS rank  -- Window function to rank all the users
 FROM posts
-WHERE post_date = '2023-11-30'																	-- Filtering records for the specific dates
+WHERE post_date = '2023-11-30'					-- Filtering records for the specific dates
 OR post_date = '2023-12-01'
-GROUP BY 1, 2																										-- Grouping records, because we have aggregated data (posts)
+GROUP BY 1, 2							-- Grouping records, because we have aggregated data (posts)
 )
 
-SELECT post_date																								-- Selecting final columns
-			 ,user_id
-       ,posts
-FROM tempt																											-- from temporary CTE table
-WHERE rank <= 2																									-- Filtering to include only top 1 and top 2 users
-ORDER BY 1, 2																										-- Ordering the final table by post_date and user_id
+SELECT  post_date						-- Selecting final columns
+	,user_id
+	,posts
+FROM tempt							-- from temporary CTE table
+WHERE rank <= 2							-- Filtering to include only top 1 and top 2 users
+ORDER BY 1, 2							-- Ordering the final table by post_date and user_id
 ;
